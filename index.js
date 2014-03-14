@@ -412,8 +412,7 @@ function($scope, POST) {
       // IE
       var img = document.createElement('img')
       img.src = canvas.toDataURL('image/jpeg')
-      img.id = 'result-image'
-      document.getElementById('content').appendChild(img) // 画像追加
+      document.getElementById('result-images').appendChild(img) // 画像追加
       $scope.hasResult = true
     } else {
       // ほか
@@ -421,9 +420,9 @@ function($scope, POST) {
     }
   }
   $scope.removeImages = function() {
-    var img = document.getElementById('result-image')
-    if (img.parentNode)
-      img.parentNode.removeChild(img)
+    var images = document.getElementById('result-images')
+    while (images.firstChild)
+      images.removeChild(images.firstChild)
     $scope.hasResult = false
   }
 }])
