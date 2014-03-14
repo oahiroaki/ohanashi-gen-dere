@@ -13,6 +13,6 @@
   {"id": "karin", "name": "道明寺歌鈴", "attr": "Cu"},
   {"id": "rin", "name": "渋谷凛", "attr": "Co"},
   {"id": "uduki", "name": "島村卯月", "attr": "Cu"},
-  {"id": "seira", "name": "水木聖來", "atte": "Co"},
+  {"id": "seira", "name": "水木聖來", "attr": "Co"},
   {"id": "trainer", "name": "トレーナー", "attr": "Ex"}
 ]
