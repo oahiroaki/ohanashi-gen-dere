@@ -1,0 +1,18 @@
+[
+  {"id": "aiko", "name": "高森藍子", "attr": "Pa"},
+  {"id": "miho", "name": "小日向美穂", "attr": "Cu"},
+  {"id": "riina", "name": "多田李衣菜", "attr": "Co"},
+  {"id": "kana", "name": "今井加奈", "attr": "Cu"},
+  {"id": "chihiro", "name": "千川ちひろ", "attr": "Ex"},
+  {"id": "kaede", "name": "高垣楓", "attr": "Co"},
+  {"id": "saki", "name": "吉岡沙紀", "attr": "Co"},
+  {"id": "kirari", "name": "諸星きらり", "attr": "Pa"},
+  {"id": "nao", "name": "神谷奈緒", "attr": "Co"},
+  {"id": "mio", "name": "本田未央", "attr": "Pa"},
+  {"id": "nataria", "name": "ナターリア", "attr": "Pa"},
+  {"id": "karin", "name": "道明寺歌鈴", "attr": "Cu"},
+  {"id": "rin", "name": "渋谷凛", "attr": "Co"},
+  {"id": "uduki", "name": "島村卯月", "attr": "Cu"},
+  {"id": "seira", "name": "水木聖來", "atte": "Co"},
+  {"id": "trainer", "name": "トレーナー", "attr": "Ex"}
+]

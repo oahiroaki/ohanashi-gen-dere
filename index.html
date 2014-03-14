@@ -1,0 +1,181 @@
+<!doctype html>
+<html ng-app="ohanashi-generator-dere">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=0.5,minimum-scale=0.5">
+<script src="vender/angular.min.js"></script>
+<script src="vender/angular-resource.min.js"></script>
+<link rel="stylesheet" href="vender/pure-min.css">
+<title>おはなしジェネレータ for アイドルマスターシンデレラガールズ</title>
+<style>
+@font-face {
+  font-family: rounded-mplus-1m-medium;
+  src: url('font/rounded-mplus-1m-medium.woff') format('woff'),
+      url('font/rounded-mplus-1m-medium.ttf') format('truetype');
+}
+
+textarea {
+  width: 100%;
+}
+#idol-list img {
+  width: 40px;
+  height: 40px;
+}
+#face-list img {
+  width: 60px;
+  height: 60px;
+}
+#idol-list ul,
+#face-list ul {
+  list-style: none;
+}
+#idol-list li,
+#face-list li {
+  display: inline;
+  margin: 2px;
+}
+#idol-list li img,
+#face-list li img {
+  cursor: pointer;
+}
+#story ul {
+  padding: 0;
+  margin: 10px 0;
+  list-style: none;
+  margin-bottom: 10px;
+}
+#story li {
+  margin: 0;
+  padding: 0;
+}
+#story li button {
+  width: 48px;
+  height: 48px;
+  background-color: #0078E7;
+  text-decoration: none;
+  border: 0;
+  color: white;
+  font-weight: bold;
+  border-radius: 2px;
+  margin-bottom: 2px;
+}
+#story li img {
+  width: 592px;
+  height: 148px;
+  vertical-align: bottom;
+  float: left;
+}
+#content,
+footer {
+  width: 640px;
+  margin: 0 auto;
+  padding: 0;
+}
+header {
+  width: 100%;
+  padding: 0 10px;
+  text-align: center;
+}
+header h3 {
+  margin: 0;
+}
+/* スマホ用 */
+@media only screen and (max-device-width: 320px) {
+#idol-list img {
+    width: 60px;
+    height: 60px;
+}
+#face-list img {
+  width: 100px;
+  height: 100px;
+}
+body {
+  font-size: 200%;
+}
+}
+</style>
+</head>
+<body>
+<header>
+  <h3>おはなしジェネレータ for アイドルマスターシンデレラガールズ</h3>
+  なにかある場合は<a href="http://twitter.com/oahiroaki">@oahiroaki</a>までお願いします
+</header>
+<div id="content">
+  <h2>キャラクターを選ぶ</h2>
+  <div id="idol-list" ng-controller="IdolCtrl">
+    <ul>
+      <li ng-repeat="idol in idols">
+      <img ng-src="img/icon/{{idol.id}}/1.png" ng-click="select(idol)">
+      </li>
+    </ul>
+  </div>
+  <div id="face-list" ng-controller="FaceCtrl">
+    <h2>表情を選ぶ</h2>
+    <ul>
+      <li ng-repeat="icon in icons">
+      <img ng-src="img/icon/{{id}}/{{icon}}" ng-click="select(icon)">
+      </li>
+    </ul>
+  </div>
+  <div ng-controller="PostCtrl">
+    <canvas post-canvas id="canvas" style="font-family: rounded-mplus-1m-medium;"></canvas>
+    <hr>
+    <form class="pure-form pure-form-stacked">
+      <textarea ng-model="message" ng-change="drawMessage()"
+        ng-init="message = 'セリフ'" rows="3"></textarea>
+      <label for="post-name">名前</label>
+      <input id="post-name" type="text" ng-model="name" ng-change="drawPost()">
+      <label for="post-file">アイコン</label>
+      <input id="post-file" type="file" name="iconImage" file="fileData" ng-click="loadFile()">
+      <label for="font-size">フォントサイズ</label>
+      <select id="font-size" ng-change="drawMessage()" ng-model="fontSize" ng-init="fontSize = 'M'">
+        <option value="S">小</option>
+        <option value="M">中</option>
+        <option value="L">大</option>
+      </select>
+      <label for="post-border-color">枠の色</label>
+      <input id="post-border-color" type="text" ng-model="borderColor" ng-change="drawBorderColor()">
+      <button ng-click="savePost()" type="submit"
+        class="pure-button pure-button-primary">追加する</button>
+      <button ng-click="redraw()" class="pure-button">再描画する</button>
+      ※ゴミが残った時用
+    </form>
+    <hr>
+    <div id="story" ng-controller="StoryCtrl">
+      <ul width="640">
+        <li ng-repeat="image in images" ng-style="{clear: 'both'}">
+          <img id="{{image.timestamp}}" ng-src="{{image.src}}">
+          <button ng-click="remove(image.timestamp)">X</button>
+          <button ng-click="moveUp(image.timestamp)"
+            ng-if="$index !== 0">↑</button>
+          <button ng-click="moveDown(image.timestamp)"
+            ng-if="$index !== (images.length - 1)">↓</button>
+        </li>
+      </ul>
+      <br style="clear: both; line-height: 0">
+      <button class="pure-button pure-button-primary"
+        ng-if="hasStory" ng-click="saveImages()">保存する</button>
+    </div>
+  </div>
+</div>
+<footer>
+  使い方<br>
+  セリフを書いて適当に追加して保存するを押す→右クリックなどで画像を保存<br>
+  IEは同じページに画像が追加されてしまうので消したいときはリロードしてください<br>
+  たぶん非対応: Internet Exploer 9 以下、Android 2.x系の標準ブラウザ
+  <p>謝辞<br>
+  <a href="http://ohanashi.herokuapp.com/">おはなしジェネレーター for アイドルマスターミリオンライブ！</a><br>
+  参考にさせて頂きました<br>
+  <a href="http://siropimas.blog35.fc2.com/blog-entry-272.html">シロPのしろーとな日記</a>、
+  <a href="http://blog.goo.ne.jp/seiran-kai/e/d072093bd4e317f0df99dc8cc0ed457a">晴嵐改の生存確認ブログ</a><br>
+  立ち絵を使わせて頂きました<br>
+  <a href="https://sites.google.com/site/roundedmplus/">自家製 Rounded M+</a><br>
+  フォントを使わせて頂きました
+  </p>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://oahiroaki.github.io/ohanasi-generator-dere/" data-via="oahiroaki" data-lang="ja">ツイート</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  <a href="https://github.com/oahiroaki/ohanasi-generator-dere">ソースコード</a>
+</footer>
+<script src="index.js"></script>
+</body>
+</html>
