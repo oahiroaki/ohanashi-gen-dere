@@ -174,7 +174,8 @@ function(POST, Idols) {
     }
     // 縦の点線
     for (var i = 0; i < 3; i++) {
-      for (var y = nameFrameHeight + separaterCenter + margin, min = diff; y > min; y -= step) {
+      for (var y = nameFrameHeight + separaterCenter + margin,
+          min = diff; y > min; y -= step) {
         context.beginPath()
         arcWithDiff(radius + step * i, y)
         context.closePath()
@@ -254,7 +255,7 @@ App.directive('file', ['$window', function($window) {
     },
     link: function(scope, element, attr) {
       element.bind('change', function(e) {
-        if (! e.target.files[0].type.match("image/(?:jpeg|png)")) {
+        if (! e.target.files[0].type.match(/image\/(?:jpeg|png)/)) {
           $window.alert("Invalid file type")
           return
         }
@@ -326,7 +327,8 @@ function($scope, $window, $q, selectState, POST) {
     return selectState
   }, function () {
     $scope.idol = selectState.idol
-    $scope.borderColor = POST.attrColor[selectState.idol.attr] || POST.borderColor
+    $scope.borderColor =
+        POST.attrColor[selectState.idol.attr] || POST.borderColor
     $scope.name = selectState.idol.name
     $scope.iconSrc = selectState.icon
     $scope.$broadcast('drawAll')
@@ -348,7 +350,8 @@ function($scope, $window, $q, selectState, POST) {
     return defer.promise
   }()).then(function() {
     $scope.idol = selectState.idol
-    $scope.borderColor = POST.attrColor[selectState.idol.attr] || POST.borderColor
+    $scope.borderColor =
+        POST.attrColor[selectState.idol.attr] || POST.borderColor
     $scope.name = selectState.idol.name
     $scope.iconSrc = selectState.icon
     $scope.$broadcast('drawAll')
@@ -356,8 +359,8 @@ function($scope, $window, $q, selectState, POST) {
 }])
 
 // StoryCtrl < PostCtrl {{{1
-App.controller('StoryCtrl', ['$scope',
-function($scope) {
+App.controller('StoryCtrl', ['$scope', 'POST',
+function($scope, POST) {
   var canvas = document.createElement("canvas")
     , context = canvas.getContext("2d")
 
@@ -373,6 +376,7 @@ function($scope) {
   }
   $scope.images = []
   $scope.hasStory = false
+  $scope.hasResult = false
   $scope.remove = function(stamp) {
     var idx = getImagesIndex(stamp)
     if (idx >= 0)
@@ -396,10 +400,11 @@ function($scope) {
   })
   $scope.saveImages = function() {
     angular.element(canvas)
-      .attr('width', 640)
-      .attr('height', 160 * $scope.images.length)
+      .attr('width', POST.width)
+      .attr('height', POST.height * $scope.images.length)
     $scope.images.forEach(function(val, idx) {
-      context.drawImage(document.getElementById(val.timestamp), 0, 160 * idx)
+      context.drawImage(
+        document.getElementById(val.timestamp), 0, POST.height * idx)
     })
     // IEだとdata URIがなんかうまくいかないのでブラウザ判別して分岐
     var ua = window.navigator.userAgent.toLowerCase()
@@ -407,12 +412,19 @@ function($scope) {
       // IE
       var img = document.createElement('img')
       img.src = canvas.toDataURL('image/jpeg')
-      // content末尾に画像追加
-      document.getElementById('content').appendChild(img)
+      img.id = 'result-image'
+      document.getElementById('content').appendChild(img) // 画像追加
+      $scope.hasResult = true
     } else {
       // ほか
       window.open(canvas.toDataURL('image/jpeg'), "Story")
     }
+  }
+  $scope.removeImages = function() {
+    var img = document.getElementById('result-image')
+    if (img.parentNode)
+      img.parentNode.removeChild(img)
+    $scope.hasResult = false
   }
 }])
 ;
