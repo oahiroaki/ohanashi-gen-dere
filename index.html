@@ -39,7 +39,7 @@ textarea {
   margin: 0;
   padding: 0;
 }
-#story li button {
+.ctrl-button {
   width: 48px;
   height: 48px;
   background-color: #0078E7;
@@ -49,6 +49,7 @@ textarea {
   font-weight: bold;
   border-radius: 2px;
   margin-bottom: 2px;
+  font-size: 16px;
 }
 #story li img {
   width: 592px;
@@ -82,9 +83,6 @@ header h3 {
 }
 body {
   font-size: 200%;
-}
-#story li button {
-  font-size: 100% !important;
 }
 }
 /* ほか */
@@ -150,10 +148,10 @@ body {
       <ul width="640">
         <li ng-repeat="image in images" ng-style="{clear: 'both'}">
           <img id="{{image.timestamp}}" ng-src="{{image.src}}">
-          <button ng-click="remove(image.timestamp)">X</button>
-          <button ng-click="moveUp(image.timestamp)"
+          <button class="ctrl-button" ng-click="remove(image.timestamp)">X</button>
+          <button class="ctrl-button" ng-click="moveUp(image.timestamp)"
             ng-if="$index !== 0">↑</button>
-          <button ng-click="moveDown(image.timestamp)"
+          <button class="ctrl-button" ng-click="moveDown(image.timestamp)"
             ng-if="$index !== (images.length - 1)">↓</button>
         </li>
       </ul>
