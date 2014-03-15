@@ -16,8 +16,8 @@
 textarea {
   width: 100%;
 }
-#idol-list ul,
-#face-list ul {
+#idol-list,
+#face-list {
   list-style: none;
 }
 #idol-list li,
@@ -105,16 +105,25 @@ body {
 </header>
 <div id="content">
   <h2>キャラクターを選ぶ</h2>
-  <div id="idol-list" ng-controller="IdolCtrl">
-    <ul>
-      <li ng-repeat="idol in idols">
+  <div ng-controller="IdolCtrl">
+    <div class="pure-menu pure-menu-open pure-menu-horizontal">
+      <a href="#" class="pure-menu-heading">属性</a>
+      <ul>
+        <li ng-repeat="val in attrs"
+          ng-class="val.className" ng-click="clickAttr(val)">
+        <a href="#">{{val.showName}}</a>
+        </li>
+      </ul>
+    </div>
+    <ul id="idol-list">
+      <li ng-repeat="idol in idols|byAttrsFilter:attrs">
       <img ng-src="img/icon/{{idol.id}}/1.png" ng-click="select(idol)">
       </li>
     </ul>
   </div>
-  <div id="face-list" ng-controller="FaceCtrl">
+  <div ng-controller="FaceCtrl">
     <h2>表情を選ぶ</h2>
-    <ul>
+    <ul id="face-list">
       <li ng-repeat="icon in icons">
       <img ng-src="img/icon/{{id}}/{{icon}}" ng-click="select(icon)">
       </li>
@@ -158,9 +167,9 @@ body {
       <br style="clear: both; line-height: 0">
       <form style="margin: 5px 0px;">
         <button class="pure-button pure-button-primary"
-          ng-if="hasStory" ng-click="saveImages()">保存する</button>
+          ng-show="hasStory" ng-click="saveImages()">保存する</button>
         <button class="pure-button pure-button-primary"
-          ng-if="hasResult" ng-click="removeImages()">消す</button>
+          ng-show="hasResult" ng-click="removeImages()">消す</button>
       </form>
       <div id="result-images"></div>
     </div>

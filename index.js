@@ -19,9 +19,10 @@ App.constant('POST', {
   lineRadius: 2, // 点線の丸半径
   lineSpace: 2, // 点線の間隔
   attrColor: { // 属性色
-    Pa: '#FFAA33',
     Cu: '#FF66AA',
-    Co: '#4477EE'
+    Co: '#4477EE',
+    Pa: '#FFAA33',
+    Ex: '#666666'
   }
 })
 
@@ -248,7 +249,8 @@ function(POST, Idols) {
 }])
 
 // File directive {{{1
-App.directive('file', ['$window', function($window) {
+App.directive('file', ['$window',
+function($window) {
   return {
     scope: {
       file: '='
@@ -267,13 +269,47 @@ App.directive('file', ['$window', function($window) {
   }
 }])
 
+
 // IdolCtrl {{{1
-App.controller('IdolCtrl', ['$scope', 'Idols', 'selectState',
-function($scope, Idols, selectState) {
+App.controller('IdolCtrl', ['$scope', 'Idols', 'selectState', 'POST',
+function($scope, Idols, selectState, POST) {
+  // TODO: ちゃんとConstにする
+  var showName = {
+    Cu: 'キュート',
+    Co: 'クール',
+    Pa: 'パッション',
+    Ex: 'その他'
+  }
+  $scope.attrs = Object.keys(POST.attrColor).map(function(attr) {
+    return {
+      attr: attr,
+      showName: showName[attr],
+      state: true,
+      className: 'pure-menu-selected'
+    }
+  })
+  $scope.clickAttr = function(val) {
+    val.state = !val.state
+    val.className = (val.state) ? 'pure-menu-selected' : ''
+  }
   $scope.idols = Idols.query()
   $scope.select = function(idol) {
     selectState.idol = idol
-    selectState.icon = 'img/' + idol.id + '/1.png?' + new Date().getTime()
+    selectState.icon = 'img/' + idol.id + '/1.png'
+  }
+}])
+
+/// ByAttrs filter {{{1
+App.filter('byAttrsFilter', ['POST',
+function() {
+  return function(idols, attrs) {
+    var def = {}
+    attrs.forEach(function(val) {
+      def[val.attr] = val.state
+    })
+    return idols.filter(function(idol) {
+      return def[idol.attr]
+    })
   }
 }])
 
@@ -294,8 +330,7 @@ function($scope, Icons, selectState) {
     $scope.icons = icons[selectState.idol.id]
   })
   $scope.select = function(icon) {
-    selectState.icon = 'img/' + $scope.id + '/' +
-      icon + '?' + new Date().getTime() // MEMO: new Date().getTime() いらんかも
+    selectState.icon = 'img/' + $scope.id + '/' + icon
   }
 }])
 
