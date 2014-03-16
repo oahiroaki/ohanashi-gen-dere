@@ -1,6 +1,6 @@
+// Gloval angular module variable
 var App = angular.module('ohanashi-generator-dere', ['ngResource'])
 
-// Consts {{{1
 App.constant('IDOL', {
   attributes: { // 属性定義
     Cu: 'キュート',
@@ -35,7 +35,7 @@ App.constant('POST', {
   }
 })
 
-// Resources {{{1
+
 App.factory('Idols', ['$resource',
 function($resource) {
   return $resource('idol_list.json')
@@ -46,13 +46,49 @@ function($resource) {
   return $resource('face_list.json')
 }])
 
-// State value {{{1
+
+// Save global state of selection
 App.value('selectState', {
   idol: {"id": "aiko", "name": "高森藍子", "attr": "Pa"},
-  icon: 'img/aiko/1.png?' + new Date().getTime()
+  icon: 'img/aiko/1.png'
 })
 
-// PostCanvas directive {{{1
+App.filter('byAttrsFilter', ['POST',
+function() {
+  return function(idols, attrs) {
+    var def = {}
+    attrs.forEach(function(val) {
+      def[val.attr] = val.state
+    })
+    return idols.filter(function(idol) {
+      return def[idol.attr]
+    })
+  }
+}])
+
+
+App.directive('file', ['$window',
+function($window) {
+  return {
+    scope: {
+      file: '='
+    },
+    link: function(scope, element, attr) {
+      element.bind('change', function(e) {
+        if (! e.target.files[0].type.match(/image\/(?:jpeg|png)/)) {
+          $window.alert("Invalid file type")
+          return
+        }
+        scope.$apply(function() {
+          scope.file = e.target.files[0]
+        })
+      })
+    }
+  }
+}])
+
+
+
 App.directive('postCanvas', ['POST', 'Idols',
 function(POST, Idols) {
   var width  = POST.width // 全体幅
@@ -257,29 +293,28 @@ function(POST, Idols) {
   }
 }])
 
-// File directive {{{1
-App.directive('file', ['$window',
-function($window) {
-  return {
-    scope: {
-      file: '='
-    },
-    link: function(scope, element, attr) {
-      element.bind('change', function(e) {
-        if (! e.target.files[0].type.match(/image\/(?:jpeg|png)/)) {
-          $window.alert("Invalid file type")
-          return
-        }
-        scope.$apply(function() {
-          scope.file = e.target.files[0]
-        })
-      })
-    }
+
+App.controller('FaceCtrl', ['$scope', 'Icons', 'selectState',
+function($scope, Icons, selectState) {
+  var icons = Icons.get()
+  $scope.icons = null
+  $scope.id = null
+  icons.$promise.then(function() {
+    $scope.icons = icons[selectState.idol.id]
+    $scope.id = selectState.idol.id
+  })
+  $scope.$watch(function() {
+    return selectState.idol
+  }, function() {
+    $scope.id = selectState.idol.id
+    $scope.icons = icons[selectState.idol.id]
+  })
+  $scope.select = function(icon) {
+    selectState.icon = 'img/' + $scope.id + '/' + icon
   }
 }])
 
 
-// IdolCtrl {{{1
 App.controller('IdolCtrl', ['$scope', 'Idols', 'selectState', 'IDOL',
 function($scope, Idols, selectState, IDOL) {
   $scope.attrs = Object.keys(IDOL.attributes).map(function(attr) {
@@ -301,42 +336,7 @@ function($scope, Idols, selectState, IDOL) {
   }
 }])
 
-/// ByAttrs filter {{{1
-App.filter('byAttrsFilter', ['POST',
-function() {
-  return function(idols, attrs) {
-    var def = {}
-    attrs.forEach(function(val) {
-      def[val.attr] = val.state
-    })
-    return idols.filter(function(idol) {
-      return def[idol.attr]
-    })
-  }
-}])
 
-// FaceCtrl {{{1
-App.controller('FaceCtrl', ['$scope', 'Icons', 'selectState',
-function($scope, Icons, selectState) {
-  var icons = Icons.get()
-  $scope.icons = null
-  $scope.id = null
-  icons.$promise.then(function() {
-    $scope.icons = icons[selectState.idol.id]
-    $scope.id = selectState.idol.id
-  })
-  $scope.$watch(function() {
-    return selectState.idol
-  }, function() {
-    $scope.id = selectState.idol.id
-    $scope.icons = icons[selectState.idol.id]
-  })
-  $scope.select = function(icon) {
-    selectState.icon = 'img/' + $scope.id + '/' + icon
-  }
-}])
-
-// PostCtrl {{{1
 App.controller('PostCtrl', ['$scope', '$window', '$q', 'selectState', 'POST',
 function($scope, $window, $q, selectState, POST) {
   $scope.message = 'セリフ'
@@ -395,8 +395,7 @@ function($scope, $window, $q, selectState, POST) {
   })
 }])
 
-// StoryCtrl < PostCtrl {{{1
-App.controller('StoryCtrl', ['$scope', 'POST',
+App.controller('StoryCtrl', ['$scope', '$window', 'POST',
 function($scope, POST) {
   var canvas = document.createElement("canvas")
     , context = canvas.getContext("2d")
@@ -444,7 +443,7 @@ function($scope, POST) {
         document.getElementById(val.timestamp), 0, POST.height * idx)
     })
     // IEだとdata URIがなんかうまくいかないのでブラウザ判別して分岐
-    var ua = window.navigator.userAgent.toLowerCase()
+    var ua = $window.navigator.userAgent.toLowerCase()
     if (ua.indexOf('msie') >= 0 || ua.indexOf('trident') >= 0) {
       // IE
       var img = document.createElement('img')
@@ -453,7 +452,7 @@ function($scope, POST) {
       $scope.hasResult = true
     } else {
       // ほか
-      window.open(canvas.toDataURL('image/jpeg'), "Story")
+      $window.open(canvas.toDataURL('image/jpeg'), "Story")
     }
   }
   $scope.removeImages = function() {
