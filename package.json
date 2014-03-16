@@ -1,0 +1,24 @@
+{
+  "name": "ohanashi-generator-dare",
+  "version": "0.0.0",
+  "description": "シンデレラガールズ向けおはなしジェネレーター This software is released under the MIT License, see LICENSE.txt.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oahiroaki/ohanashi-gen-dere.git"
+  },
+  "author": "Hiroaki Ohtake",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oahiroaki/ohanashi-gen-dere/issues"
+  },
+  "homepage": "https://github.com/oahiroaki/ohanashi-gen-dere",
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-concat": "^0.3.0",
+    "grunt-contrib-connect": "^0.7.1"
+  }
+}
