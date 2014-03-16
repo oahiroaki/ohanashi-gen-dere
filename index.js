@@ -1,6 +1,15 @@
 var App = angular.module('ohanashi-generator-dere', ['ngResource'])
 
 // Consts {{{1
+App.constant('IDOL', {
+  attributes: { // 属性定義
+    Cu: 'キュート',
+    Co: 'クール',
+    Pa: 'パッション',
+    Ex: 'その他'
+  }
+})
+
 App.constant('POST', {
   width: 640,
   height: 160,
@@ -271,19 +280,12 @@ function($window) {
 
 
 // IdolCtrl {{{1
-App.controller('IdolCtrl', ['$scope', 'Idols', 'selectState', 'POST',
-function($scope, Idols, selectState, POST) {
-  // TODO: ちゃんとConstにする
-  var showName = {
-    Cu: 'キュート',
-    Co: 'クール',
-    Pa: 'パッション',
-    Ex: 'その他'
-  }
-  $scope.attrs = Object.keys(POST.attrColor).map(function(attr) {
+App.controller('IdolCtrl', ['$scope', 'Idols', 'selectState', 'IDOL',
+function($scope, Idols, selectState, IDOL) {
+  $scope.attrs = Object.keys(IDOL.attributes).map(function(attr) {
     return {
       attr: attr,
-      showName: showName[attr],
+      showName: IDOL.attributes[attr],
       state: true,
       className: 'pure-menu-selected'
     }
