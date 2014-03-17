@@ -201,4 +201,3 @@ function(POST, Idols) {
     }
   }
 }])
-

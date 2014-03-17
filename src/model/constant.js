@@ -31,4 +31,3 @@ App.constant('POST', {
     Ex: '#666666'
   }
 })
-

@@ -7,4 +7,3 @@ App.factory('Icons', ['$resource',
 function($resource) {
   return $resource('face_list.json')
 }])
-

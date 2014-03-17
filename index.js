@@ -35,7 +35,6 @@ App.constant('POST', {
   }
 })
 
-
 App.factory('Idols', ['$resource',
 function($resource) {
   return $resource('idol_list.json')
@@ -45,7 +44,6 @@ App.factory('Icons', ['$resource',
 function($resource) {
   return $resource('face_list.json')
 }])
-
 
 // Save global state of selection
 App.value('selectState', {
@@ -66,7 +64,6 @@ function() {
   }
 }])
 
-
 App.directive('file', ['$window',
 function($window) {
   return {
@@ -86,8 +83,6 @@ function($window) {
     }
   }
 }])
-
-
 
 App.directive('postCanvas', ['POST', 'Idols',
 function(POST, Idols) {
@@ -293,7 +288,6 @@ function(POST, Idols) {
   }
 }])
 
-
 App.controller('FaceCtrl', ['$scope', 'Icons', 'selectState',
 function($scope, Icons, selectState) {
   var icons = Icons.get()
@@ -313,7 +307,6 @@ function($scope, Icons, selectState) {
     selectState.icon = 'img/' + $scope.id + '/' + icon
   }
 }])
-
 
 App.controller('IdolCtrl', ['$scope', 'Idols', 'selectState', 'IDOL',
 function($scope, Idols, selectState, IDOL) {
@@ -335,7 +328,6 @@ function($scope, Idols, selectState, IDOL) {
     selectState.icon = 'img/' + idol.id + '/1.png'
   }
 }])
-
 
 App.controller('PostCtrl', ['$scope', '$window', '$q', 'selectState', 'POST',
 function($scope, $window, $q, selectState, POST) {

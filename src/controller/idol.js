@@ -18,4 +18,3 @@ function($scope, Idols, selectState, IDOL) {
     selectState.icon = 'img/' + idol.id + '/1.png'
   }
 }])
-

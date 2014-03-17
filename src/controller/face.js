@@ -17,4 +17,3 @@ function($scope, Icons, selectState) {
     selectState.icon = 'img/' + $scope.id + '/' + icon
   }
 }])
-
