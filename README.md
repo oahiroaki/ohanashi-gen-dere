@@ -14,7 +14,7 @@ $ npm install
 
 ビルド
 ```
-$ grunt concat
+$ grunt build
 ```
 
 ローカルで実行する
