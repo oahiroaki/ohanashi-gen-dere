@@ -6,7 +6,7 @@ pcFaceSize = 60px
 
 @font-face
   font-family: rounded-mplus-1m-medium
-  src: url('/font/rounded-mplus-1m-medium.woff') format('woff'), url('/font/rounded-mplus-1m-medium.ttf') format('truetype')
+  src: url('../font/rounded-mplus-1m-medium.woff') format('woff'), url('../font/rounded-mplus-1m-medium.ttf') format('truetype')
 
 textarea
   width: 100%
