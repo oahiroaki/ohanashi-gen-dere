@@ -44,7 +44,9 @@ function($scope, $window, $q, selectState, POST) {
   // window.onloadイベント後でないとcanvasにwebフォントが適用されない
   ;(function() {
     var defer = $q.defer()
-    $window.onload = function() { defer.resolve() }
+    $window.addEventListener('load', function() {
+      defer.resolve()
+    }, false)
     return defer.promise
   }()).then(function() {
     $scope.idol = selectState.idol
