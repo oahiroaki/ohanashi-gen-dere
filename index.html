@@ -3,100 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=0.5,minimum-scale=0.5">
+<title>おはなしジェネレータ for アイドルマスターシンデレラガールズ</title>
+<link rel="stylesheet" href="vendor/pure-min.css">
+<link rel="stylesheet" href="css/index.css">
 <script src="vendor/angular.min.js"></script>
 <script src="vendor/angular-resource.min.js"></script>
-<link rel="stylesheet" href="vendor/pure-min.css">
-<title>おはなしジェネレータ for アイドルマスターシンデレラガールズ</title>
-<style>
-@font-face {
-  font-family: rounded-mplus-1m-medium;
-  src: url('font/rounded-mplus-1m-medium.woff') format('woff'),
-      url('font/rounded-mplus-1m-medium.ttf') format('truetype');
-}
-textarea {
-  width: 100%;
-}
-#idol-list,
-#face-list {
-  list-style: none;
-}
-#idol-list li,
-#face-list li {
-  display: inline;
-  margin: 2px;
-}
-#idol-list li img,
-#face-list li img {
-  cursor: pointer;
-}
-#story ul {
-  padding: 0;
-  margin: 10px 0;
-  list-style: none;
-  margin-bottom: 10px;
-}
-#story li {
-  margin: 0;
-  padding: 0;
-}
-.ctrl-button {
-  width: 48px;
-  height: 48px;
-  background-color: #FFFFFF;
-  text-decoration: none;
-  border: 2px solid #333333;
-  color: #333333;
-  font-weight: bold;
-  border-radius: 2px;
-  margin-bottom: 1px;
-  font-size: 16px;
-}
-#story li img {
-  width: 592px;
-  height: 148px;
-  vertical-align: bottom;
-  float: left;
-}
-#content,
-footer {
-  width: 640px;
-  margin: 0 auto;
-  padding: 0;
-}
-header {
-  width: 100%;
-  padding: 0 10px;
-  text-align: center;
-}
-header h3 {
-  margin: 0;
-}
-/* スマホ用 */
-@media only screen and (max-device-width: 320px) {
-#idol-list img {
-  width: 60px;
-  height: 60px;
-}
-#face-list img {
-  width: 100px;
-  height: 100px;
-}
-body {
-  font-size: 200%;
-}
-}
-/* ほか */
-@media only screen and (min-device-width: 321px) {
-#idol-list img {
-  width: 40px;
-  height: 40px;
-}
-#face-list img {
-  width: 60px;
-  height: 60px;
-}
-}
-</style>
 </head>
 <body>
 <header>
