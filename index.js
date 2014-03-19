@@ -390,7 +390,8 @@ function($scope, $window, $q, selectState, POST) {
 }])
 
 App.controller('StoryCtrl', ['$scope', '$window', 'POST',
-function($scope, POST) {
+function($scope, $window, POST) {
+  // Canvas
   var canvas = document.createElement("canvas")
     , context = canvas.getContext("2d")
 
