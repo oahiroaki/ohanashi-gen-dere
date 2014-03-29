@@ -1,4 +1,4 @@
-App.filter('byAttrsFilter', ['POST',
+App.filter('byAttrsFilter', [
 function() {
   return function(idols, attrs) {
     var def = {}
