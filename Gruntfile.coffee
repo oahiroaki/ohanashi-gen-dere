@@ -1,4 +1,6 @@
 module.exports = (grunt) ->
+  grunt.util.linefeed = '\n'
+
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-connect'
   grunt.loadNpmTasks 'grunt-contrib-stylus'
@@ -47,4 +49,4 @@ module.exports = (grunt) ->
       face_list[path.basename(charname)] = icons
     grunt.file.write grunt.config('facelist.dest'), JSON.stringify(face_list)
   grunt.registerTask 'server', 'connect'
-  grunt.registerTask 'build', ['concat', 'stylus']
+  grunt.registerTask 'build', ['facelist', 'concat', 'stylus']
