@@ -51,7 +51,7 @@ App.value('selectState', {
   icon: 'img/aiko/1.png'
 })
 
-App.filter('byAttrsFilter', ['POST',
+App.filter('byAttrsFilter', [
 function() {
   return function(idols, attrs) {
     var def = {}

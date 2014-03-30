@@ -1,4 +1,6 @@
 module.exports = (grunt) ->
+  grunt.util.linefeed = '\n'
+
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-connect'
   grunt.loadNpmTasks 'grunt-contrib-stylus'
@@ -30,6 +32,21 @@ module.exports = (grunt) ->
       css:
         files: 'stylus/*.stylus'
         tasks: ['stylus']
+    facelist:
+      src: ['img/icon/*']
+      dest: 'face_list.json'
 
+  grunt.registerTask 'facelist', 'generate face-list.json', () ->
+    path = require 'path'
+    grunt.log.writeln 'Generating face-list.json.'
+    grunt.config.requires 'facelist.src'
+    grunt.config.requires 'facelist.dest'
+    face_list = {}
+    for charname in grunt.file.expand grunt.config('facelist.src')
+      icons = []
+      for fname in grunt.file.expand "#{charname}/*.png"
+        icons.push path.basename(fname)
+      face_list[path.basename(charname)] = icons
+    grunt.file.write grunt.config('facelist.dest'), JSON.stringify(face_list)
   grunt.registerTask 'server', 'connect'
-  grunt.registerTask 'build', ['concat', 'stylus']
+  grunt.registerTask 'build', ['facelist', 'concat', 'stylus']
