@@ -17,12 +17,11 @@
 <div id="content">
   <h2>キャラクターを選ぶ</h2>
   <div ng-controller="IdolCtrl">
-    <div class="pure-menu pure-menu-open pure-menu-horizontal">
-      <a href="#" class="pure-menu-heading">属性</a>
+    <div id="attr-menu" class="pure-menu pure-menu-open pure-menu-horizontal">
+      <span class="pure-menu-heading">属性</span>
       <ul>
-        <li ng-repeat="val in attrs"
-          ng-class="val.className" ng-click="clickAttr(val)">
-        <a href="#">{{val.showName}}</a>
+        <li ng-repeat="val in attrs" ng-class="val.className" ng-click="clickAttr(val)">
+          <a href="#">{{val.showName}}</a>
         </li>
       </ul>
     </div>

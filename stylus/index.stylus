@@ -11,6 +11,12 @@ pcFaceSize = 60px
 textarea
   width: 100%
 
+#attr-menu .pure-menu-heading
+  font-weight: bold
+
+#attr-menu .pure-menu-selected
+  background-color: #EEEEEE
+
 #idol-list, #face-list
   list-style: none
 
