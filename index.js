@@ -1,5 +1,5 @@
 // Gloval angular module variable
-var App = angular.module('ohanashi-generator-dere', ['ngResource'])
+var App = angular.module("ohanashi-generator-dere", ["ngResource"])
 
 App.constant('IDOL', {
   attributes: { // 属性定義
@@ -329,132 +329,175 @@ function($scope, Idols, selectState, IDOL) {
   }
 }])
 
-App.controller('PostCtrl', ['$scope', '$window', '$q', 'selectState', 'POST',
-function($scope, $window, $q, selectState, POST) {
-  $scope.message = 'セリフ'
-  $scope.fontSize = 'M'
-  $scope.iconSrc = ''
-  $scope.name = ''
-  $scope.borderColor = POST.borderColor
-  $scope.idol = null
-  $scope.fileData = null
-  $scope.savePost = function() {
-    $scope.$broadcast('savedImage', canvas.toDataURL('image/jpeg'))
-  }
-  // FIXME: この辺からクッソ雑なのでもうちょいまともに書きかえ
-  // Canvasに変更通知
-  $scope.redraw = function() { $scope.$broadcast('drawAll') }
-  $scope.drawMessage = function() { $scope.$broadcast('drawMessage') }
-  $scope.drawPost = function() { $scope.$broadcast('drawPost') }
-  $scope.drawBorderColor = function() {
-    if (! $scope.borderColor.match(/#[0-9A-F]{6}/))
-      return
-    $scope.$broadcast('drawAll')
-  }
-  // アイドルが選択された時
-  $scope.$watchCollection(function() {
-    return selectState
-  }, function () {
-    $scope.idol = selectState.idol
-    $scope.borderColor =
-        POST.attrColor[selectState.idol.attr] || POST.borderColor
-    $scope.name = selectState.idol.name
-    $scope.iconSrc = selectState.icon
-    $scope.$broadcast('drawAll')
-  })
-  // ファイル読み込み時
-  $scope.$watch('fileData', function() {
-    var reader = new FileReader()
-    reader.onload = function(readerEvent) {
-      $scope.iconSrc = readerEvent.target.result
-      $scope.$broadcast('drawAll')
+App.controller("PostCtrl", [
+  "$scope",
+  "$window",
+  "$q",
+  "selectState",
+  "POST",
+  function($scope, $window, $q, selectState, POST) {
+    $scope.message = "セリフ"
+    $scope.fontSize = "M"
+    $scope.iconSrc = ""
+    $scope.name = ""
+    $scope.borderColor = POST.borderColor
+    $scope.idol = null
+    $scope.fileData = null
+    $scope.savePost = function() {
+      $scope.$broadcast("savedImage", canvas.toDataURL())
     }
-    if ($scope.fileData)
-      reader.readAsDataURL($scope.fileData)
-  })
-  // window.onloadイベント後でないとcanvasにwebフォントが適用されない
-  ;(function() {
-    var defer = $q.defer()
-    $window.addEventListener('load', function() {
-      defer.resolve()
-    }, false)
-    return defer.promise
-  }()).then(function() {
-    $scope.idol = selectState.idol
-    $scope.borderColor =
-        POST.attrColor[selectState.idol.attr] || POST.borderColor
-    $scope.name = selectState.idol.name
-    $scope.iconSrc = selectState.icon
-    $scope.$broadcast('drawAll')
-  })
-}])
-
-App.controller('StoryCtrl', ['$scope', '$window', 'POST',
-function($scope, $window, POST) {
-  // Canvas
-  var canvas = document.createElement("canvas")
-    , context = canvas.getContext("2d")
-
-  function getImagesIndex(stamp) {
-    return $scope.images.map(function(val) {
-      return val.timestamp
-    }).indexOf(stamp)
-  }
-  function swapImages(idx1, idx2) {
-    var tmp = $scope.images[idx1]
-    $scope.images[idx1] = $scope.images[idx2]
-    $scope.images[idx2] = tmp
-  }
-  $scope.images = []
-  $scope.hasStory = false
-  $scope.hasResult = false
-  $scope.remove = function(stamp) {
-    var idx = getImagesIndex(stamp)
-    if (idx >= 0)
-      $scope.images.splice(idx, 1)
-    $scope.hasStory = !!($scope.images.length > 0)
-  }
-  $scope.moveUp = function(stamp) {
-    var idx = getImagesIndex(stamp)
-    if (idx > 0)
-      swapImages(idx - 1, idx)
-  }
-  $scope.moveDown = function(stamp) {
-    var idx = getImagesIndex(stamp)
-    if (idx >= 0 && idx < $scope.images.length - 1)
-      swapImages(idx, idx + 1)
-  }
-  $scope.$on('savedImage', function(e, imgData) {
-    var date = new Date().getTime()
-    $scope.images.push({timestamp: date, src: imgData})
-    $scope.hasStory = !!($scope.images.length > 0)
-  })
-  $scope.saveImages = function() {
-    angular.element(canvas)
-      .attr('width', POST.width)
-      .attr('height', POST.height * $scope.images.length)
-    $scope.images.forEach(function(val, idx) {
-      context.drawImage(
-        document.getElementById(val.timestamp), 0, POST.height * idx)
+    // FIXME: この辺からクッソ雑なのでもうちょいまともに書きかえ
+    // Canvasに変更通知
+    $scope.redraw = function() {
+      $scope.$broadcast("drawAll")
+    }
+    $scope.drawMessage = function() {
+      $scope.$broadcast("drawMessage")
+    }
+    $scope.drawPost = function() {
+      $scope.$broadcast("drawPost")
+    }
+    $scope.drawBorderColor = function() {
+      if (!$scope.borderColor.match(/#[0-9A-F]{6}/)) return
+      $scope.$broadcast("drawAll")
+    }
+    // アイドルが選択された時
+    $scope.$watchCollection(
+      function() {
+        return selectState
+      },
+      function() {
+        $scope.idol = selectState.idol
+        $scope.borderColor =
+          POST.attrColor[selectState.idol.attr] || POST.borderColor
+        $scope.name = selectState.idol.name
+        $scope.iconSrc = selectState.icon
+        $scope.$broadcast("drawAll")
+      }
+    )
+    // ファイル読み込み時
+    $scope.$watch("fileData", function() {
+      var reader = new FileReader()
+      reader.onload = function(readerEvent) {
+        $scope.iconSrc = readerEvent.target.result
+        $scope.$broadcast("drawAll")
+      }
+      if ($scope.fileData) reader.readAsDataURL($scope.fileData)
     })
-    // IEだとdata URIがなんかうまくいかないのでブラウザ判別して分岐
-    var ua = $window.navigator.userAgent.toLowerCase()
-    if (ua.indexOf('msie') >= 0 || ua.indexOf('trident') >= 0) {
-      // IE
-      var img = document.createElement('img')
-      img.src = canvas.toDataURL('image/jpeg')
-      document.getElementById('result-images').appendChild(img) // 画像追加
-      $scope.hasResult = true
-    } else {
-      // ほか
-      $window.open(canvas.toDataURL('image/jpeg'), "Story")
+    // window.onloadイベント後でないとcanvasにwebフォントが適用されない
+    ;(function() {
+      var defer = $q.defer()
+      $window.addEventListener(
+        "load",
+        function() {
+          defer.resolve()
+        },
+        false
+      )
+      return defer.promise
+    })().then(function() {
+      $scope.idol = selectState.idol
+      $scope.borderColor =
+        POST.attrColor[selectState.idol.attr] || POST.borderColor
+      $scope.name = selectState.idol.name
+      $scope.iconSrc = selectState.icon
+      $scope.$broadcast("drawAll")
+    })
+  }
+])
+
+App.controller("StoryCtrl", [
+  "$scope",
+  "$window",
+  "POST",
+  function($scope, $window, POST) {
+    // Canvas
+    var canvas = document.createElement("canvas"),
+      context = canvas.getContext("2d")
+
+    function getImagesIndex(stamp) {
+      return $scope.images
+        .map(function(val) {
+          return val.timestamp
+        })
+        .indexOf(stamp)
+    }
+
+    function swapImages(idx1, idx2) {
+      var tmp = $scope.images[idx1]
+      $scope.images[idx1] = $scope.images[idx2]
+      $scope.images[idx2] = tmp
+    }
+
+    function downloadByLink(url) {
+      var link = document.createElement("a")
+      var results = document.querySelector("#result-images")
+      link.href = url
+      link.download = "story.png" // デフォルトファイル名
+      results.appendChild(link)
+      link.click()
+      results.removeChild()
+    }
+
+    /**
+     * Canvasを画像に変換してダウンロードする
+     * @param {HTMLCanvasElement} canvas
+     */
+    function downloadCanvas(canvas) {
+      if (canvas.msToBlob) {
+        // IE11, Edgeなど
+        var blob = canvas.msToBlob()
+        navigator.msSaveOrOpenBlob(blob, "story.png")
+      } else if (canvas.toBlob) {
+        // Chrome, Firefoxなど
+        canvas.toBlob(function(blob) {
+          var url = URL.createObjectURL(blob)
+          downloadByLink(url)
+        })
+      } else if (canvas.toDataURL) {
+        // Safariなど
+        var url = canvas.toDataURL()
+        downloadByLink(url)
+      } else {
+        alert("対応していないブラウザです。")
+      }
+    }
+
+    $scope.images = []
+    $scope.hasStory = false
+    $scope.hasResult = false
+    $scope.remove = function(stamp) {
+      var idx = getImagesIndex(stamp)
+      if (idx >= 0) $scope.images.splice(idx, 1)
+      $scope.hasStory = !!($scope.images.length > 0)
+    }
+    $scope.moveUp = function(stamp) {
+      var idx = getImagesIndex(stamp)
+      if (idx > 0) swapImages(idx - 1, idx)
+    }
+    $scope.moveDown = function(stamp) {
+      var idx = getImagesIndex(stamp)
+      if (idx >= 0 && idx < $scope.images.length - 1) swapImages(idx, idx + 1)
+    }
+    $scope.$on("savedImage", function(e, imgData) {
+      var date = new Date().getTime()
+      $scope.images.push({ timestamp: date, src: imgData })
+      $scope.hasStory = !!($scope.images.length > 0)
+    })
+    $scope.saveImages = function() {
+      angular
+        .element(canvas)
+        .attr("width", POST.width)
+        .attr("height", POST.height * $scope.images.length)
+      $scope.images.forEach(function(val, idx) {
+        context.drawImage(
+          document.getElementById(val.timestamp),
+          0,
+          POST.height * idx
+        )
+      })
+
+      downloadCanvas(canvas)
     }
   }
-  $scope.removeImages = function() {
-    var images = document.getElementById('result-images')
-    while (images.firstChild)
-      images.removeChild(images.firstChild)
-    $scope.hasResult = false
-  }
-}])
-;
+])
