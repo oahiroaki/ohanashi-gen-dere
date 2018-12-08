@@ -18,6 +18,5 @@ $ grunt build
 ```
 
 ローカルで実行する
-```
-$ grunt connect
-```
+
+    $ npm start
